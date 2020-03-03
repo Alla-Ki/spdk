@@ -61,7 +61,7 @@ struct ibv_pd* perf_get_pd(const struct spdk_nvme_transport_id *trid,
 {
 	assert(g_perf_ibv);
 	printf("verbs %p\n", verbs);
-	for(uint32_t i = 0; i < g_perf_ibv_num_contexts; i++) {
+	for(int i = 0; i < g_perf_ibv_num_contexts; i++) {
 		if(g_perf_ibv[i].context == verbs) {
 			printf("match at idx %u\n", i);
 			return g_perf_ibv[i].pd;

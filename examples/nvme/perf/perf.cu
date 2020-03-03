@@ -263,12 +263,12 @@ struct trid_entry {
 
 static TAILQ_HEAD(, trid_entry) g_trid_list = TAILQ_HEAD_INITIALIZER(g_trid_list);
 
-static int g_aio_optind; /* Index of first AIO filename in argv */
 
 static inline void
 task_complete(struct perf_task *task);
 
 #if HAVE_LIBAIO
+static int g_aio_optind; /* Index of first AIO filename in argv */
 static void
 aio_setup_payload(struct perf_task *task, uint8_t pattern)
 {
@@ -517,7 +517,7 @@ nvme_setup_payload(struct perf_task *task, uint8_t pattern)
 		fprintf(stderr, "cudaHostRegister failed with %d\n", res);
 		exit (-1);
 	}
-	task->gpu_iov.iov_base = g_gpu_mem + max_io_size_bytes * task->gpu_chunk_id ;
+	task->gpu_iov.iov_base = (char *)g_gpu_mem + max_io_size_bytes * task->gpu_chunk_id ;
 	task->gpu_iov.iov_len = max_io_size_bytes;
 #endif
 
@@ -1954,7 +1954,9 @@ parse_args(int argc, char **argv)
 		}
 
 
+#if HAVE_LIBAIO
 	g_aio_optind = optind;
+#endif
 
 	return 0;
 }
