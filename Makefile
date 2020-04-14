@@ -34,6 +34,7 @@
 S :=
 
 SPDK_ROOT_DIR := $(CURDIR)
+
 include $(SPDK_ROOT_DIR)/mk/spdk.common.mk
 
 DIRS-y += lib

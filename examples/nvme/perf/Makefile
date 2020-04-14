@@ -35,6 +35,8 @@ SPDK_ROOT_DIR := $(abspath $(CURDIR)/../../..)
 
 APP = perf
 
+C_SRCS := perf_gpu_allocator.cu
+
 install: $(APP)
 	$(INSTALL_EXAMPLE)
 

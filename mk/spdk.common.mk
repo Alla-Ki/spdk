@@ -138,6 +138,11 @@ SYS_LIBS += -L/usr/local/lib
 COMMON_CFLAGS += -I/usr/local/include
 endif
 
+CUDA_PATH ?= /hpc/local/oss/cuda10.1
+SYS_LIBS += -lcuda -lcudart -lstdc++
+SYS_LIBS += -L/lib64 -L$(CUDA_PATH)/lib
+COMMON_CFLAGS += -I$(CUDA_PATH)/include
+
 # Attach only if PMDK lib specified with configure
 ifneq ($(CONFIG_PMDK_DIR),)
 LIBS += -L$(CONFIG_PMDK_DIR)/src/nondebug
@@ -248,6 +253,10 @@ COMPILE_C=\
 	$(Q)echo "  CC $S/$@"; \
 	$(CC) -o $@ $(DEPFLAGS) $(CFLAGS) -c $< && \
 	mv -f $*.d.tmp $*.d && touch -c $@
+
+COMPILE_CU=\
+	$(Q)echo "  nvcc $S/$@"; \
+	nvcc -o $@ $(CUFALGS) -c $<
 
 COMPILE_CXX=\
 	$(Q)echo "  CXX $S/$@"; \
@@ -372,6 +381,9 @@ UNINSTALL_HEADER=\
 
 %.o: %.c %.d $(MAKEFILE_LIST)
 	$(COMPILE_C)
+
+%.o: %.cu %.d $(MAKEFILE_LIST)
+	$(COMPILE_CU)
 
 %.o: %.cpp %.d $(MAKEFILE_LIST)
 	$(COMPILE_CXX)
